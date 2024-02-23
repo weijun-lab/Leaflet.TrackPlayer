@@ -2,7 +2,7 @@
 # Leafelt.TrackPlayer
 A Leaflet trajectory playback plugin that automatically rotates the marker icon based on the actual direction of travel and dynamically adjusts the colors of the traveled and untraveled distances to clearly indicate the current progress. It also supports custom settings such as driving speed, among other features. Detailed documentation can be found below.
 ## Live Demo
-<https://iosphere.github.io/Leaflet.hotline/demo/>
+<https://weijun-lab.github.io/Leaflet.TrackPlayer/>
 ## Installation
 * `npm install leafelt-track-player`
 * Or download the repository
