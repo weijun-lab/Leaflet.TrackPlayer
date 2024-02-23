@@ -7,9 +7,6 @@
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "registry": "https://www.npmjs.com/package/leaflet-trackplayer"
-  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
