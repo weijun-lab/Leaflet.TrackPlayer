@@ -11,11 +11,15 @@ A Leaflet trajectory playback plugin that automatically rotates the marker icon 
 ### ESM(ECMAScript Modules)
 ```js
 import  "leafelt-track-player";
-let track = new L.TrackPlayer(latlngs, options).addTo(map)
 ```
 ### UMD(Universal Module Definition)
 ```html
 <script src="leafelt-track-player/dist/leaflet-measure-simplify.umd.cjs"></script>
+```
+
+---
+
+```js
 let track = new L.TrackPlayer(latlngs, options).addTo(map)
 ```
 ## Code Example
