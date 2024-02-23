@@ -18,7 +18,7 @@
     "url": "https://github.com/weijun-lab/Leaflet.TrackPlayer.git"
   },
   "author": "weijun",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "leaflet": "^1.9.4",
     "vite": "^5.0.12",
