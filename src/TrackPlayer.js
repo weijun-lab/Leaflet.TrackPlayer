@@ -80,7 +80,6 @@ L.TrackPlayer = class {
       weight: this.options.weight,
       color: this.options.notPassedLineColor,
     }).addTo(this.map);
-    console.log();
     this.passedLine = L.polyline([], {
       weight: this.options.weight,
       color: this.options.passedLineColor,
