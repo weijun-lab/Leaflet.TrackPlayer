@@ -9,7 +9,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, "./src/TrackPlayer.js"),
       name: "TrackPlayer", //全局变量名称
-      fileName: "leaflet.TrackPlayer",
+      fileName: "leaflet-trackplayer",
     },
     rollupOptions: {
       external: ['leaflet'],//指定外部依赖，不会将其打包到bundle中

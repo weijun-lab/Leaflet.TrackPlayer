@@ -10,11 +10,11 @@ A Leaflet trajectory playback plugin that automatically rotates the marker icon 
 ## Usage
 ### ESM(ECMAScript Modules)
 ```js
-import  "leafelt-track-player";
+import  "leaflet-trackplayer";
 ```
 ### UMD(Universal Module Definition)
 ```html
-<script src="leafelt-track-player/dist/leaflet-measure-simplify.umd.cjs"></script>
+<script src="Leaflet.TrackPlayer/dist/leaflet-trackplayer.umd.cjs"></script>
 ```
 
 ---
