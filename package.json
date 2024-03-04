@@ -1,6 +1,6 @@
 {
   "name": "leaflet-trackplayer",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A Leaflet trajectory playback plugin that automatically rotates the marker icon based on the actual direction of travel and dynamically adjusts the colors of the traveled and untraveled distances to clearly indicate the current progress. It also supports custom settings such as driving speed, among other features. Detailed documentation can be found below.",
   "main": "dist/leaflet-trackplayer.umd.cjs",
   "module": "dist/leaflet-trackplayer.js",
@@ -21,7 +21,7 @@
     "type": "git",
     "url": "https://github.com/weijun-lab/Leaflet.TrackPlayer.git"
   },
-  "author": "Wei Jun",
+  "author": "Jun Wei",
   "license": "MIT",
   "devDependencies": {
     "leaflet": "^1.9.4",

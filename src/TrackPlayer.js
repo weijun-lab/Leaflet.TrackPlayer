@@ -128,7 +128,7 @@ L.TrackPlayer = class {
         this.markerPoint = [lat, lng];
         if (this.options.panTo) {
           this.map.panTo(this.markerPoint, {
-            animation: false,
+            animate: false,
           });
         }
         this.options.marker && this.options.marker.setLatLng(this.markerPoint);

@@ -2379,7 +2379,7 @@ I.TrackPlayer = class {
     this.notPassedLine = I.polyline(t, {
       weight: this.options.weight,
       color: this.options.notPassedLineColor
-    }).addTo(this.map), console.log(), this.passedLine = I.polyline([], {
+    }).addTo(this.map), this.passedLine = I.polyline([], {
       weight: this.options.weight,
       color: this.options.passedLineColor
     }).addTo(this.map), this.polylineDecorator = I.polylineDecorator(
@@ -2402,7 +2402,7 @@ I.TrackPlayer = class {
         this.advances = t * (n / i) + this.advancesTemp;
         let [a, u] = Gt(this.track, this.advances).geometry.coordinates;
         if (this.markerPoint = [u, a], this.options.panTo && this.map.panTo(this.markerPoint, {
-          animation: !1
+          animate: !1
         }), this.options.marker && this.options.marker.setLatLng(this.markerPoint), this.advances >= t)
           this.notPassedLine.setLatLngs([]);
         else {
