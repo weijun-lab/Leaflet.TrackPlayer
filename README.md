@@ -5,7 +5,7 @@ A Leaflet trajectory playback plugin that automatically rotates the marker icon 
 ## 🎨Live Demo
 <https://weijun-lab.github.io/Leaflet.TrackPlayer/>
 ## Installation
-* `npm install leafelt-track-player`
+* `npm install leaflet-trackplayer`
 * Or download the repository
 ## Usage
 ### ESM(ECMAScript Modules)
