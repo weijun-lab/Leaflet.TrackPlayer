@@ -188,6 +188,7 @@ L.TrackPlayer = class {
         this.listenedEvents.movingCallback.forEach((item) =>
           item(L.latLng(...this.markerPoint))
         );
+        // 或者把进度直接传给"moving"事件，是不是好一些
         if (this.advances <= distance) {
           this.options.progress = Math.ceil((this.advances / distance) * 100);
           this.listenedEvents.progressCallback.forEach((item) =>
@@ -242,6 +243,7 @@ L.TrackPlayer = class {
     this.options.progress = progress;
     this.advancesTemp = distance * (progress / 100);
     this.startTimestamp = 0;
+    // 对于暂停跟完成状态，调整进度。
     if (this.isPaused || this.finished) {
       this.advances = distance * (progress / 100);
       let [lng, lat] = turf.along(this.track, this.advances).geometry
