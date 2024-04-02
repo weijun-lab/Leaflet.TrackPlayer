@@ -8,13 +8,27 @@ L.TrackPlayer = class {
       speed: options.speed ?? 600,
       weight: options.weight ?? 8,
       marker: options.marker,
-      polylineDecoratorOptions: options.polylineDecoratorOptions ?? {patterns: [{offset: 30, repeat: 60, symbol: L.Symbol.arrowHead({pixelSize: 5, headAngle: 75,polygon: false,pathOptions: { stroke: true,weight: 3,color: "#fff" }})}]},
+      polylineDecoratorOptions: options.polylineDecoratorOptions ?? {
+        patterns: [
+          {
+            offset: 30,
+            repeat: 60,
+            symbol: L.Symbol.arrowHead({
+              pixelSize: 5,
+              headAngle: 75,
+              polygon: false,
+              pathOptions: { stroke: true, weight: 3, color: "#fff" },
+            }),
+          },
+        ],
+      },
       passedLineColor: options.passedLineColor ?? "#0000ff",
       notPassedLineColor: options.notPassedLineColor ?? "#ff0000",
       panTo: options.panTo ?? true,
       markerRotationOrigin: options.markerRotationOrigin ?? "center",
       markerRotationOffset: options.markerRotationOffset ?? 0,
       markerRotation: options.markerRotation ?? true,
+      progress: options.progress ?? 0,
     };
     this.markerInitLnglat = options.marker ? options.marker.getLatLng() : "";
 
@@ -32,6 +46,7 @@ L.TrackPlayer = class {
       pause: [],
       finished: [],
       movingCallback: [],
+      progressCallback: [],
     };
   }
   addTo(map) {
@@ -91,7 +106,10 @@ L.TrackPlayer = class {
   }
   start() {
     if (!this.isPaused || !this.polylineDecorator) return;
-    if (this.finished) {
+    if (
+      (this.finished && this.options.progress === 0) ||
+      this.options.progress === 100
+    ) {
       this.finished = false;
       this.startTimestamp = 0;
       this.pauseTimestamp = 0;
@@ -119,7 +137,7 @@ L.TrackPlayer = class {
     //开始播放轨迹
     let player = (timestamp) => {
       if (timestamp && !this.isPaused) {
-        let duration = (distance / this.options.speed) * 3600 * 1000;
+        let duration = (distance / this.options.speed) * 3600 * 1000; // 跑多远/ms
         this.startTimestamp ||= timestamp;
         let progress = timestamp - this.startTimestamp; //时间过去了多久
         this.advances = distance * (progress / duration) + this.advancesTemp; //根据当前时间计算要下一个点位要前进多远距离
@@ -170,6 +188,12 @@ L.TrackPlayer = class {
         this.listenedEvents.movingCallback.forEach((item) =>
           item(L.latLng(...this.markerPoint))
         );
+        if (this.advances <= distance) {
+          this.options.progress = Math.ceil((this.advances / distance) * 100);
+          this.listenedEvents.progressCallback.forEach((item) =>
+            item(L.latLng(...this.markerPoint), this.options.progress)
+          );
+        }
         if (this.advances > distance) {
           this.isPaused = true;
           this.finished = true;
@@ -206,6 +230,78 @@ L.TrackPlayer = class {
     this.advancesTemp = this.advances; //记录当前点位已经前进了多少距离了
     this.startTimestamp = 0;
   }
+  setProgress(progress, wait = 20) {
+    //函数防抖
+    clearTimeout(this.timeoutProgressId);
+    this.timeoutProgressId = setTimeout(() => {
+      this.setProgressAction(progress);
+    }, wait);
+  }
+  setProgressAction(progress) {
+    let distance = turf.length(this.track);
+    this.options.progress = progress;
+    this.advancesTemp = distance * (progress / 100);
+    this.startTimestamp = 0;
+    if (this.isPaused || this.finished) {
+      this.advances = distance * (progress / 100);
+      let [lng, lat] = turf.along(this.track, this.advances).geometry
+        .coordinates;
+      this.markerPoint = [lat, lng];
+      if (this.options.panTo) {
+        this.map.panTo(this.markerPoint, {
+          animate: false,
+        });
+      }
+      this.options.marker && this.options.marker.setLatLng(this.markerPoint);
+      if (this.advances >= distance) {
+        this.notPassedLine.setLatLngs([]);
+      } else {
+        let sliced = turf.lineSliceAlong(this.track, this.advances);
+        this.notPassedLine.setLatLngs(
+          sliced.geometry.coordinates.map(([lng, lat]) => [lat, lng])
+        );
+      }
+      if (this.advances > 0) {
+        let sliced = turf.lineSliceAlong(this.track, 0, this.advances);
+        this.passedLine.setLatLngs(
+          sliced.geometry.coordinates.map(([lng, lat]) => [lat, lng])
+        );
+      }
+      if (this.advances < distance) {
+        let sliced = turf.lineSlice(
+          turf.point([lng, lat]),
+          turf.point(this.track.geometry.coordinates.at(-1)),
+          this.track
+        );
+        if (this.options.markerRotation && this.options.marker) {
+          let coordinates = sliced.geometry.coordinates;
+          let bearing = turf.bearing(
+            turf.point(coordinates[0]),
+            turf.point(coordinates[1])
+          );
+          this.options.marker.setRotationAngle(
+            bearing / 2 + this.options.markerRotationOffset / 2
+          );
+        }
+      }
+      if (this.advances >= distance) {
+        this.isPaused = true;
+        this.finished = true;
+        this.listenedEvents.finished.forEach((item) => item());
+        if (this.options.markerRotation && this.options.marker) {
+          let coordinates = this.track.geometry.coordinates;
+          let bearing = turf.bearing(
+            turf.point(coordinates.at(-2)),
+            turf.point(coordinates.at(-1))
+          );
+          this.options.marker.setRotationAngle(
+            bearing / 2 + this.options.markerRotationOffset / 2
+          );
+        }
+        return;
+      }
+    }
+  }
   on(evetName, callback) {
     switch (evetName) {
       case "start":
@@ -220,27 +316,31 @@ L.TrackPlayer = class {
       case "moving":
         this.listenedEvents.movingCallback.push(callback);
         break;
+      case "progress":
+        this.listenedEvents.progressCallback.push(callback);
+        break;
     }
   }
   off(evetName, callback) {
     if (!callback) {
       this.listenedEvents[evetName] = [];
       return;
-    };
+    }
     switch (evetName) {
       case "start":
-        this.listenedEvents.start =
-          this.listenedEvents.start.filter((item) => item !== callback);
+        this.listenedEvents.start = this.listenedEvents.start.filter(
+          (item) => item !== callback
+        );
         break;
       case "pause":
-        this.listenedEvents.pause =
-          this.listenedEvents.pause.filter((item) => item !== callback);
+        this.listenedEvents.pause = this.listenedEvents.pause.filter(
+          (item) => item !== callback
+        );
         break;
       case "finished":
-        this.listenedEvents.finished =
-          this.listenedEvents.finished.filter(
-            (item) => item !== callback
-          );
+        this.listenedEvents.finished = this.listenedEvents.finished.filter(
+          (item) => item !== callback
+        );
         break;
       case "moving":
         this.listenedEvents.movingCallback =
@@ -248,6 +348,12 @@ L.TrackPlayer = class {
             (item) => item !== callback
           );
         break;
+      case "progress":
+        this.listenedEvents.progressCallback =
+          this.listenedEvents.progressCallback.filter(
+            (item) => item !== callback
+          );
+        break;
     }
   }
-}
+};

@@ -68,6 +68,7 @@ An array of latitude and longitude data for the trajectory, which is the same as
 | **pause** | Triggered when playback is paused
 | **finished** | Triggered when playback completes
 | **moving** | Triggered during playback; receives the current location in the callback function
+| **progress** | Triggered during playback; receives the current location and progress in the callback function
 
 
 ## Methods
