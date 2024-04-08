@@ -1749,6 +1749,10 @@ z.TrackPlayer = class {
           n.geometry.coordinates.map(([o, u]) => [u, o])
         );
       }
+      if (this.advances === 0) {
+        this.passedLine.setLatLngs([]);
+        return;
+      }
       if (this.advances > 0) {
         let n = rt(this.track, 0, this.advances);
         this.passedLine.setLatLngs(

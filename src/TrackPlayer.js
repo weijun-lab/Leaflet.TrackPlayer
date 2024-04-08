@@ -263,6 +263,11 @@ L.TrackPlayer = class {
           sliced.geometry.coordinates.map(([lng, lat]) => [lat, lng])
         );
       }
+      // 进度为零
+      if (this.advances === 0) {
+        this.passedLine.setLatLngs([]);
+        return;
+      }
       if (this.advances > 0) {
         let sliced = turf.lineSliceAlong(this.track, 0, this.advances);
         this.passedLine.setLatLngs(
