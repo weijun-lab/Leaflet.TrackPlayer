@@ -68,6 +68,7 @@ An array of latitude and longitude data for the trajectory, which is the same as
 | **pause** | Triggered when playback is paused
 | **finished** | Triggered when playback completes
 | **moving** | Triggered during playback; receives the current location in the callback function
+| **progress** | Triggered during playback; receives the current location and progress in the callback function
 
 
 ## Methods
@@ -76,6 +77,7 @@ An array of latitude and longitude data for the trajectory, which is the same as
 | start() | - | Start playback |
 | pause() | - | Pause playback |
 | setSpeed(`<Number> speed`) | - | Set the playback speed (km/h) |
+| setProgress(`<Number> progress`) | - | Set the playback progress value to 0-100 (%) |
 | addTo(`<Map> map`) | this | Adds the track player to the map |
 | remove() | - | Removes the track player from the map |
 | on(`<String> type,<Function> fn`) | - | Adds a listener function to the specified event type |
