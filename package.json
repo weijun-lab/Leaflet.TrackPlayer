@@ -24,12 +24,14 @@
   "author": "Jun Wei",
   "license": "MIT",
   "devDependencies": {
-    "leaflet": "^1.9.4",
-    "vite": "^5.0.12",
-    "vite-plugin-html": "^3.2.2",
     "@turf/turf": "^6.5.0",
+    "leaflet": "^1.9.4",
     "leaflet-polylinedecorator": "^1.6.0",
-    "leaflet-rotatedmarker": "^0.2.0"
+    "leaflet-rotatedmarker": "^0.2.0",
+    "vite": "^5.0.12",
+    "vite-plugin-html": "^3.2.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "decimal.js": "^10.4.3"
+  }
 }

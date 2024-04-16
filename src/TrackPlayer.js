@@ -5,9 +5,22 @@ import "leaflet-rotatedmarker";
 L.TrackPlayer = class {
   constructor(track, options = {}) {
     //格式化传入的轨迹数组，目的是传入的轨迹数组可以是任意格式（[{lng:xx,lat:xx}]/[[xx,xx]]）
-    let _track = L.polyline(track)._latlngs;
-    this.track = turf.lineString(_track.map(({ lng, lat }) => [lng, lat]));
+    let leafletLatlngs = L.polyline(track)._latlngs;
+    leafletLatlngs = leafletLatlngs.filter((item, index) => {
+      let _index = leafletLatlngs.findIndex(
+        ({ lng, lat }) => lng == item.lng && lat == item.lat
+      );
+      return _index == index;
+    });
+    this.track = turf.lineString(leafletLatlngs.map(({lng,lat})=>[lng,lat]));
+    this.distanceSlice = [];
+    this.track.geometry.coordinates.forEach((item, index, arr) => {
+      if (index == arr.length - 1) return;
+      let line = turf.lineString(arr.slice(index));
+      this.distanceSlice.push(turf.length(line));
+    });
     this.distance = turf.length(this.track);
+
     this.options = {
       speed: options.speed ?? 600,
       weight: options.weight ?? 8,
@@ -36,22 +49,21 @@ L.TrackPlayer = class {
     };
     this.initProgress = options.progress;
     if (this.options.markerIcon) {
-      this.options.marker = L.marker(_track[0], {
+      this.options.marker = L.marker(track[0], {
         icon: this.options.markerIcon,
       });
     }
 
     this.markerInitLnglat = options.marker ? options.marker.getLatLng() : "";
     this.isPaused = true;
-    this.pauseDuration = 0;
     this.walkedDistance = 0;
     this.walkedDistanceTemp = 0;
+    this.trackIndex = 0;
     //被监听的事件
     this.listenedEvents = {
       start: [],
       pause: [],
       finished: [],
-      movingCallback: [],
       progressCallback: [],
     };
   }
@@ -64,7 +76,7 @@ L.TrackPlayer = class {
         let coordinates = this.track.geometry.coordinates;
         this.options.marker.setRotationAngle(
           turf.bearing(coordinates[0], coordinates[1]) / 2 +
-          this.options.markerRotationOffset / 2
+            this.options.markerRotationOffset / 2
         );
         this.options.marker.setRotationOrigin(
           this.options.markerRotationOrigin
@@ -95,6 +107,7 @@ L.TrackPlayer = class {
       this.pauseTimestamp = 0;
       this.walkedDistanceTemp = 0;
       this.walkedDistance = 0;
+      this.trackIndex = 0;
       this.pause();
     }
   }
@@ -114,15 +127,15 @@ L.TrackPlayer = class {
     ).addTo(this.map);
   }
   start() {
-    if (!this.isPaused || !this.polylineDecorator) return;
+    if ((!this.isPaused && !this.finished) || !this.polylineDecorator) return;
     if (this.options.progress === 0 || this.options.progress === 1) {
-      this.finished = false;
       this.startTimestamp = 0;
       this.pauseTimestamp = 0;
       this.walkedDistanceTemp = 0;
       this.walkedDistance = 0;
     }
     this.isPaused = false;
+    this.finished = false;
     if (this.pauseTimestamp && this.startTimestamp) {
       this.startTimestamp =
         this.startTimestamp + (Date.now() - this.pauseTimestamp);
@@ -134,8 +147,7 @@ L.TrackPlayer = class {
     }
   }
   pause() {
-    if (this.isPaused) return;
-    cancelAnimationFrame(this.reqId);
+    if (this.isPaused || this.finished) return;
     this.pauseTimestamp = Date.now();
     this.isPaused = true;
     this.listenedEvents.pause.forEach((item) => item());
@@ -145,21 +157,31 @@ L.TrackPlayer = class {
     let distance = this.distance;
     //开始播放轨迹
     let player = (timestamp) => {
-      //timestamp//页面创建时间戳
-      if (timestamp && !this.isPaused) {
+      if (timestamp) {
         let totalDuration = (distance / this.options.speed) * 3600 * 1000; // 总体播放时间（毫秒）
-        this.startTimestamp ||= timestamp;//为播放开始时的时间戳赋值
+        this.startTimestamp ||= timestamp; //为播放开始时的时间戳赋值
         let takeTime = timestamp - this.startTimestamp; //从播放开始到此刻时间过去了多久
-        this.walkedDistance = distance * (takeTime / totalDuration) + this.walkedDistanceTemp; //根据当前时间在整体时间的占比计算到下一个点位要前进多远距离
-        this.playAction()
+        this.walkedDistance =
+          distance * (takeTime / totalDuration) + this.walkedDistanceTemp; //根据当前时间在整体时间的占比计算到下一个点位要前进多远距离
+        this.playAction();
       }
-
-      this.reqId = requestAnimationFrame(player);
+      if (!this.isPaused && !this.finished) {
+        requestAnimationFrame(player);
+      }
     };
     player();
   }
-  playAction() {
+  playAction(settingProgress = false) {
+    if (this.isPaused && !settingProgress) return;
     let distance = this.distance;
+
+    this.trackIndex = this.distanceSlice.findIndex((item) => {
+      return item < distance - this.walkedDistance;
+    });
+    if (this.trackIndex == -1) {
+      this.trackIndex = this.distanceSlice.length;
+    }
+    
     let [lng, lat] = turf.along(this.track, this.walkedDistance).geometry
       .coordinates;
     this.markerPoint = [lat, lng];
@@ -185,39 +207,38 @@ L.TrackPlayer = class {
         sliced.geometry.coordinates.map(([lng, lat]) => [lat, lng])
       );
     } else {
-      if (this.walkedDistance === 0) {
-        this.passedLine.setLatLngs([]);
-      }
+      this.passedLine.setLatLngs([]);
     }
+    //修改箭头线使他和轨迹契合
+    this.polylineDecorator.setPaths([...this.passedLine.getLatLngs(),...this.notPassedLine.getLatLngs()]);
     //计算marker旋转角度
     if (this.walkedDistance < distance) {
-      //根据当前点截取线段
-      let sliced = turf.lineSlice(
-        turf.point([lng, lat]),
-        turf.point(this.track.geometry.coordinates.at(-1)),
-        this.track
-      );
       if (this.options.markerRotation && this.options.marker) {
         //计算当前点位到下一个点位的角度
-        let coordinates = sliced.geometry.coordinates;
-        let bearing = turf.bearing(
-          turf.point(coordinates[0]),
-          turf.point(coordinates[1])
+        let bearing = 0;
+        bearing = turf.bearing(
+          turf.point([lng, lat]),
+          turf.point(this.track.geometry.coordinates[this.trackIndex])
         );
+
         this.options.marker.setRotationAngle(
           bearing / 2 + this.options.markerRotationOffset / 2
         );
       }
     }
-
+    //更新播放进度
+    this.options.progress = Math.min(1, this.walkedDistance / distance);
+    this.listenedEvents.progressCallback.forEach((item) =>
+      item(
+        this.options.progress,
+        L.latLng(...this.markerPoint),
+        this.trackIndex
+      )
+    );
     //判断是否播放完成
     if (this.walkedDistance >= distance) {
       this.walkedDistance = distance;
-      this.isPaused = true;
       this.finished = true;
-      this.listenedEvents.movingCallback.forEach((item) =>
-        item(L.latLng(...this.markerPoint))
-      );
       this.listenedEvents.finished.forEach((item) => item());
       if (this.options.markerRotation && this.options.marker) {
         //播放完成时将marker旋转角设置为倒数第二个位置和倒数第一个位置形成的角度
@@ -231,38 +252,32 @@ L.TrackPlayer = class {
           bearing / 2 + this.options.markerRotationOffset / 2
         );
       }
-    } else {
-      this.listenedEvents.movingCallback.forEach((item) =>
-        item(L.latLng(...this.markerPoint))
-      );
     }
-
-
-    this.options.progress = this.walkedDistance / distance;
-    this.listenedEvents.progressCallback.forEach((item) =>
-      item(this.options.progress, L.latLng(...this.markerPoint))
-    );
   }
-  setSpeed(speed, wait = 10) {
-    //函数防抖
-    clearTimeout(this.timeoutId);
-    this.timeoutId = setTimeout(() => {
-      this.setSpeedAction(speed);
-    }, wait);
-  }
-  setSpeedAction(speed) {
+  setSpeed(speed) {
     this.options.speed = speed;
     this.walkedDistanceTemp = this.walkedDistance; //记录当前点位已经前进了多少距离了
     this.startTimestamp = 0;
   }
   setProgress(progress) {
+    if (
+      (this.options.progress == 1 && progress == 1) ||
+      (this.options.progress == 0 && progress == 0)
+    )
+      return;
     this.options.progress = progress;
     this.walkedDistanceTemp = this.distance * progress;
     this.startTimestamp = 0;
     // 对于暂停跟完成状态，调整进度。
     if (this.isPaused || this.finished) {
       this.walkedDistance = this.walkedDistanceTemp;
-      this.playAction()
+      if (!this.isPaused) {
+        this.finished = false;
+        this.isPaused = false;
+        this.startAction();
+      } else {
+        this.playAction(true);
+      }
     }
   }
   on(evetName, callback) {
@@ -275,9 +290,6 @@ L.TrackPlayer = class {
         break;
       case "finished":
         this.listenedEvents.finished.push(callback);
-        break;
-      case "moving":
-        this.listenedEvents.movingCallback.push(callback);
         break;
       case "progress":
         this.listenedEvents.progressCallback.push(callback);
@@ -304,12 +316,6 @@ L.TrackPlayer = class {
         this.listenedEvents.finished = this.listenedEvents.finished.filter(
           (item) => item !== callback
         );
-        break;
-      case "moving":
-        this.listenedEvents.movingCallback =
-          this.listenedEvents.movingCallback.filter(
-            (item) => item !== callback
-          );
         break;
       case "progress":
         this.listenedEvents.progressCallback =
