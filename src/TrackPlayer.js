@@ -9,12 +9,10 @@ L.TrackPlayer = class {
     this.track = turf.lineString(
       leafletLatlngs.map(({ lng, lat }) => [lng, lat])
     );
-    this.distanceSlice = [];
+    this.distanceSlice = [0];
     this.track.geometry.coordinates.forEach((item, index, arr) => {
-      if (index == arr.length - 1) {
-        this.distanceSlice.push(0);
-      } else {
-        let line = turf.lineString(arr.slice(index));
+      if(index!==0){
+        let line = turf.lineString(arr.slice(0,index+1));
         this.distanceSlice.push(turf.length(line));
       }
     });
@@ -175,12 +173,9 @@ L.TrackPlayer = class {
     if (this.isPaused && !settingProgress) return;
     let distance = this.distance;
 
-    this.trackIndex = this.distanceSlice.findIndex((item) => {
-      return item <= distance - this.walkedDistance;
+    this.trackIndex = this.distanceSlice.findIndex((item,index,arr) => {
+      return this.walkedDistance>=item&&this.walkedDistance<(arr[index+1]||Infinity);
     });
-    if (this.trackIndex == -1) {
-      this.trackIndex = this.distanceSlice.length - 1;
-    }
 
     let [lng, lat] = turf.along(this.track, this.walkedDistance).geometry
       .coordinates;
@@ -223,7 +218,7 @@ L.TrackPlayer = class {
         bearing = turf.bearing(
           turf.point([lng, lat]),
           turf.point(
-            this.track.geometry.coordinates[Math.max(this.trackIndex, 1)]
+            this.track.geometry.coordinates[this.trackIndex+1]
           )
         );
 

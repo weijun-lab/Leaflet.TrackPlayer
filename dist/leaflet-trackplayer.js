@@ -696,11 +696,9 @@ _.TrackPlayer = class {
     let t = _.polyline(e)._latlngs;
     this.track = S(
       t.map(({ lng: n, lat: r }) => [n, r])
-    ), this.distanceSlice = [], this.track.geometry.coordinates.forEach((n, r, h) => {
-      if (r == h.length - 1)
-        this.distanceSlice.push(0);
-      else {
-        let l = S(h.slice(r));
+    ), this.distanceSlice = [0], this.track.geometry.coordinates.forEach((n, r, h) => {
+      if (r !== 0) {
+        let l = S(h.slice(0, r + 1));
         this.distanceSlice.push(H(l));
       }
     }), this.distance = H(this.track), this.addedToMap = !1, this.options = {
@@ -788,7 +786,7 @@ _.TrackPlayer = class {
     if (this.isPaused && !e)
       return;
     let s = this.distance;
-    this.trackIndex = this.distanceSlice.findIndex((r) => r <= s - this.walkedDistance), this.trackIndex == -1 && (this.trackIndex = this.distanceSlice.length - 1);
+    this.trackIndex = this.distanceSlice.findIndex((r, h, l) => this.walkedDistance >= r && this.walkedDistance < (l[h + 1] || 1 / 0));
     let [t, n] = st(this.track, this.walkedDistance).geometry.coordinates;
     if (this.markerPoint = [n, t], this.options.panTo && this.map.panTo(this.markerPoint, {
       animate: !1
@@ -815,7 +813,7 @@ _.TrackPlayer = class {
       r = T(
         O([t, n]),
         O(
-          this.track.geometry.coordinates[Math.max(this.trackIndex, 1)]
+          this.track.geometry.coordinates[this.trackIndex + 1]
         )
       ), this.marker.setRotationAngle(
         r / 2 + this.options.markerRotationOffset / 2
