@@ -2,51 +2,47 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="./lib/leaflet/dist/leaflet.css" rel="stylesheet" />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background-color: #333;
-    }
-
-    #map {
-      width: 1000px;
-      height: 500px;
-      z-index: 0;
-      margin: 0 auto;
-    }
-
-    .dg.main {
-      position: fixed;
-      top: 600px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .title {
-      color: #fff;
-      text-align: center;
-      margin: 20px 0;
-    }
-  </style>
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./lib/leaflet/dist/leaflet.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background-color:#333
+        }
+        #map {
+            width: 1000px;
+            height: 500px;
+            z-index: 0;
+            margin: 0 auto;
+        }
+        .dg.main{
+            position: fixed;
+            top: 600px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .title{
+            color: #fff;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+    <title>Leaflet.TrackPlayer</title>
 </head>
 
 <body>
-  <h1 class="title">🚗Leaflet.TrackPlayer🚗</h1>
-  <div id="map"></div>
+    <h1 class="title">🚗Leaflet.TrackPlayer🚗</h1>
+    <div id="map"></div>
 </body>
 <script src="./lib/leaflet/dist/leaflet-src.js"></script>
 <script src="./lib/dat.gui/build/dat.gui.js"></script>
-<script src="../dist/leaflet-trackplayer.umd.cjs"></script>
-<script>
-let map = L.map("map", {
+<script src="./lib/leaflet-trackplayer.umd.cjs"></script>
+<script type="module">
+ let map = L.map("map", {
     zoom: 12,
     maxZoom: 18,
     center: [34.269701076858354, 108.94729614257814],
