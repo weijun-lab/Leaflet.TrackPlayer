@@ -49,7 +49,7 @@ track.on("progress",(progress, { lng, lat },index)=>{{
 ## 文档说明
 ### Latlngs
 用于轨迹的经纬度数据数组，与`L.polyline`的第一个参数相同。
-### Options
+### 配置项
 | 选项 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
 | **speed** | Number | 600 | 行驶速度（公里/小时） |
@@ -62,7 +62,7 @@ track.on("progress",(progress, { lng, lat },index)=>{{
 | **markerRotation** | Boolean | true | 标记是否根据移动方向自动旋转 |
 | **markerRotationOrigin** | String | center | 标记旋转的原点，遵循CSS `transform-origin`规则 |
 | **markerRotationOffset** | Number | 0 | 标记旋转的角度偏移量 |
-### Methods
+### 方法
 | 方法 | 返回值 | 描述 |
 | --- | --- | --- |
 | start() | - | 开始播放 |
