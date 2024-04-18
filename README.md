@@ -1,5 +1,7 @@
 
 # Leafelt.TrackPlayer
+**language:** [English](README.md) / [简体中文](README.zh-CN.md)
+ 
 A Leaflet trajectory playback plugin that automatically rotates the marker icon based on the actual direction of travel and dynamically adjusts the colors of the traveled and untraveled distances to clearly indicate the current progress. It also supports custom settings such as driving speed, among other features. Detailed documentation can be found below.
 ![](https://github.com/weijun-lab/Leaflet.TrackPlayer/blob/master/examples/lib/assets/demo.gif?raw=true)
 ## 🎨Live Demo
@@ -33,9 +35,9 @@ let latlngs = [
        ],
 ];
 let track = new L.TrackPlayer(latlngs, {
-        markerIcon: L.icon({
-          iconUrl: "Your image url",
-        }),
+        markerIcon: L.icon({
+          iconUrl: "Your image url",
+        }),
         markerRotation: false,
 }).addTo(map);
 track.start();
@@ -59,13 +61,12 @@ An array of latitude and longitude data for the trajectory, which is the same as
 | **markerRotation** | Boolean | true | Whether the marker auto-rotates according to the direction of movement |
 | **markerRotationOrigin** | String | center | The rotation origin of the marker, follows the CSS `transform-origin` rule |
 | **markerRotationOffset** | Number | 0 | The angle offset for marker rotation |
-
 ### Methods
 | Methods | Return | Description |
 | --- | --- | --- |
 | start() | - | Start playback |
 | pause() | - | Pause playback |
-| setSpeed(`<Number> speed`) | - | Set the playback speed (km/h) |
+| setSpeed(`<Number> speed,<Number> debounceTimeout?`) | - | Set the playback speed (km/h) |
 | setProgress(`<Number> progress`) | - | Set the playback progress value to 0-1|
 | addTo(`<Map> map`) | this | Adds the track player to the map |
 | remove() | - | Removes the track player from the map |
@@ -78,7 +79,6 @@ An array of latitude and longitude data for the trajectory, which is the same as
 | **pause** | Triggered when playback is paused
 | **finished** | Triggered when playback completes
 | **progress** | Triggered during playback; receives the `progress(0-1)` and `current location` and `track array index` in the callback function
-
 ## Properties
 | Properties | Type | Description |
 | --- | --- | --- |
