@@ -21,24 +21,30 @@ import "leaflet-trackplayer";
 ```
 ---
 ```javascript
-// 创建并添加轨迹播放器到地图
 let track = new L.TrackPlayer(latlngs, options).addTo(map);
 ```
 ## 代码示例
 ```javascript
 let latlngs = [
-  [34.291120985630914, 108.91770583134237],
-  [34.29428596006031, 108.9177058265846],
+       [
+           34.291120985630914,
+           108.91770583134237
+       ],
+       [
+           34.29428596006031,
+           108.9177058265846
+       ],
 ];
-let trackOptions = {
-  markerIcon: L.icon({ iconUrl: "您的图片地址" }),
-  markerRotation: false,
-};
-let track = new L.TrackPlayer(latlngs, trackOptions).addTo(map);
+let track = new L.TrackPlayer(latlngs, {
+        markerIcon: L.icon({
+          iconUrl: "Your image url",
+        }),
+        markerRotation: false,
+}).addTo(map);
 track.start();
-track.on("progress", (progress, { lng, lat }, index) => {
-  console.log(`进度：${progress} - 位置：${lng},${lat} - 轨迹索引：${index}`);
-});
+track.on("progress",(progress, { lng, lat },index)=>{{
+    console.log(`progress:${progress} - position:${lng},${lat} - trackIndex:${index}`)
+})
 ```
 ## 文档说明
 ### Latlngs
