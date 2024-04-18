@@ -1,8 +1,9 @@
 
 # Leaflet.TrackPlayer
 **语言:** [English](README.md) / [简体中文](README.zh-CN.md)
-
+- - -
 一个Leaflet轨迹播放器插件，能够根据实际行驶方向自动旋转标记图标，并动态调整已行驶和未行驶路线的颜色，清晰指示当前进度。它还支持如行驶速度、进度等其他自定义设置。详细文档见下文。
+- - -
 [![演示动画](https://github.com/weijun-lab/Leaflet.TrackPlayer/blob/master/examples/lib/assets/demo.gif?raw=true)](https://github.com/weijun-lab/Leaflet.TrackPlayer/blob/master/examples/lib/assets/demo.gif?raw=true)
 ## 🎨实时演示
 <https://weijun-lab.github.io/Leaflet.TrackPlayer/>
@@ -20,29 +21,35 @@ import "leaflet-trackplayer";
 ```
 ---
 ```javascript
-// 创建并添加轨迹播放器到地图
 let track = new L.TrackPlayer(latlngs, options).addTo(map);
 ```
 ## 代码示例
 ```javascript
 let latlngs = [
-  [34.291120985630914, 108.91770583134237],
-  [34.29428596006031, 108.9177058265846],
+       [
+           34.291120985630914,
+           108.91770583134237
+       ],
+       [
+           34.29428596006031,
+           108.9177058265846
+       ],
 ];
-let trackOptions = {
-  markerIcon: L.icon({ iconUrl: "您的图片地址" }),
-  markerRotation: false,
-};
-let track = new L.TrackPlayer(latlngs, trackOptions).addTo(map);
+let track = new L.TrackPlayer(latlngs, {
+        markerIcon: L.icon({
+          iconUrl: "Your image url",
+        }),
+        markerRotation: false,
+}).addTo(map);
 track.start();
-track.on("progress", (progress, { lng, lat }, index) => {
-  console.log(`进度：${progress} - 位置：${lng},${lat} - 轨迹索引：${index}`);
-});
+track.on("progress",(progress, { lng, lat },index)=>{{
+    console.log(`progress:${progress} - position:${lng},${lat} - trackIndex:${index}`)
+})
 ```
 ## 文档说明
 ### Latlngs
 用于轨迹的经纬度数据数组，与`L.polyline`的第一个参数相同。
-### Options
+### 配置项
 | 选项 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
 | **speed** | Number | 600 | 行驶速度（公里/小时） |
@@ -55,7 +62,7 @@ track.on("progress", (progress, { lng, lat }, index) => {
 | **markerRotation** | Boolean | true | 标记是否根据移动方向自动旋转 |
 | **markerRotationOrigin** | String | center | 标记旋转的原点，遵循CSS `transform-origin`规则 |
 | **markerRotationOffset** | Number | 0 | 标记旋转的角度偏移量 |
-### Methods
+### 方法
 | 方法 | 返回值 | 描述 |
 | --- | --- | --- |
 | start() | - | 开始播放 |
@@ -81,7 +88,7 @@ track.on("progress", (progress, { lng, lat }, index) => {
 | **notPassedLine** | L.polyline | 未行驶轨迹线段 |
 | **polylineDecorator** | L.polylineDecorator | 带箭头装饰的轨迹线段 |
 | **options** | Object | 配置选项 |
-## 致谢与参考资源
+## 🎉致谢与引用
 我对以下开源插件深表感谢，它们为本插件的功能提供了关键支持。
 * [turf](https://github.com/Turfjs/turf) —— 一款JavaScript编写的模块化地理空间引擎
 * [Leaflet.PolylineDecorator](https://github.com/bbecquet/Leaflet.PolylineDecorator) —— 定义并沿现有线段或坐标路径绘制图案
