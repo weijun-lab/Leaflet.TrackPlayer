@@ -88,7 +88,7 @@ track.on("progress",(progress, { lng, lat },index)=>{{
 | **notPassedLine** | L.polyline | 未行驶轨迹线段 |
 | **polylineDecorator** | L.polylineDecorator | 带箭头装饰的轨迹线段 |
 | **options** | Object | 配置选项 |
-## 致谢与参考资源
+## 🎉致谢与引用
 我对以下开源插件深表感谢，它们为本插件的功能提供了关键支持。
 * [turf](https://github.com/Turfjs/turf) —— 一款JavaScript编写的模块化地理空间引擎
 * [Leaflet.PolylineDecorator](https://github.com/bbecquet/Leaflet.PolylineDecorator) —— 定义并沿现有线段或坐标路径绘制图案
