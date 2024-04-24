@@ -61,6 +61,11 @@ L.TrackPlayer = class {
     if(this.addedToMap) return;
     this.map = map;
     this.addedToMap = true;
+    // 监听元素变化
+    this.resizeObserver = new ResizeObserver(() => {
+      map.invalidateSize(true);
+    });
+    this.resizeObserver.observe(map.getContainer());
     if (this.options.markerIcon) {
       let start = this.track.geometry.coordinates[0];
       this.marker = L.marker([start[1],start[0]], {
@@ -120,6 +125,8 @@ L.TrackPlayer = class {
       this.trackIndex = 0;
       this.isPaused = true;
       this.options.progress = this.initProgress;
+      // 释放对元素的监听
+      this.resizeObserver.disconnect();
     }
   }
   start() {
