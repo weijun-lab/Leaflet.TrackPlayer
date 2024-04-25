@@ -4,7 +4,8 @@ export default defineConfig({
   root: "./examples",
   base: "./", // 确保 base 是相对路径，以保持正确的资源加载
   build: {
-    minify: true,
+    minify: "esbuild",
+    target: "es2015",// 指定输出的兼容目标//https://cn.vitejs.dev/config/build-options.html#build-target
     outDir: "../dist", // 指定构建输出目录为根目录下的 dist 文件夹
     lib: {
       entry: resolve(__dirname, "./src/TrackPlayer.js"),
