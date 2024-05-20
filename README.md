@@ -3,7 +3,8 @@
 - - -
 **language:** [English](README.md) / [简体中文](README.zh-CN.md)
 - - -
-A Leaflet trajectory playback plugin that automatically rotates the marker icon based on the actual direction of travel and dynamically adjusts the colors of the traveled and untraveled distances to clearly indicate the current progress. It also supports custom settings such as driving speed, among other features. Detailed documentation can be found below.
+A Leaflet track playback plugin, enabling you to swiftly create stunning track replay functionality.
+一个leaflet轨迹回放插件，帮助你快速构建出精美的轨迹回放功能。
 - - -
 ![](https://github.com/weijun-lab/Leaflet.TrackPlayer/blob/master/examples/lib/assets/demo.gif?raw=true)
 ## 🎨Live Demo
