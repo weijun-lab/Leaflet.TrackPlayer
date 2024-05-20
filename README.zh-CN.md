@@ -2,7 +2,8 @@
 # Leaflet.TrackPlayer
 **语言:** [English](README.md) / [简体中文](README.zh-CN.md)
 - - -
-一个Leaflet轨迹播放器插件，能够根据实际行驶方向自动旋转标记图标，并动态调整已行驶和未行驶路线的颜色，清晰指示当前进度。它还支持如行驶速度、进度等其他自定义设置。详细文档见下文。
+A Leaflet track playback plugin, enabling you to swiftly create stunning track replay functionality.
+一个leaflet轨迹回放插件，帮助你快速构建出精美的轨迹回放功能。
 - - -
 [![演示动画](https://github.com/weijun-lab/Leaflet.TrackPlayer/blob/master/examples/lib/assets/demo.gif?raw=true)](https://github.com/weijun-lab/Leaflet.TrackPlayer/blob/master/examples/lib/assets/demo.gif?raw=true)
 ## 🎨实时演示
