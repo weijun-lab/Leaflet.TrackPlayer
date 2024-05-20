@@ -3,7 +3,7 @@
 - - -
 **language:** [English](README.md) / [简体中文](README.zh-CN.md)
 - - -
-A Leaflet track playback plugin, enabling you to swiftly create stunning track replay functionality.
+A Leaflet track playback plugin, enabling you to swiftly create stunning track replay functionality.  
 一个leaflet轨迹回放插件，帮助你快速构建出精美的轨迹回放功能。
 - - -
 ![](https://github.com/weijun-lab/Leaflet.TrackPlayer/blob/master/examples/lib/assets/demo.gif?raw=true)
