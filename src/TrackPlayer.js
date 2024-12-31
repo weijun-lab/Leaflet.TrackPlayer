@@ -174,7 +174,7 @@ L.TrackPlayer = class {
     let distance = this.distance;
 
     this.trackIndex = this.distanceSlice.findIndex((item,index,arr) => {
-      return this.walkedDistance>=item&&this.walkedDistance<(arr[index+1]||Infinity);
+      return this.walkedDistance>=item&&this.walkedDistance<(arr[index+1]??Infinity);
     });
 
     let [lng, lat] = turf.along(this.track, this.walkedDistance).geometry
