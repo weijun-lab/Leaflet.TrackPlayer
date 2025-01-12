@@ -19,6 +19,8 @@ L.TrackPlayer = class {
     this.distance = turf.length(this.track);
     this.addedToMap = false;
     this.options = {
+      // 新增原始数据, 使用真实的 gps 航向数据来旋转车头 by waynerQiu 2025 年 1 月 13 日 00:47:15
+      sourcePoints:options.sourcePoints??[],
       speed: options.speed ?? 600,
       weight: options.weight ?? 8,
       markerIcon: options.markerIcon,
@@ -44,6 +46,11 @@ L.TrackPlayer = class {
       markerRotation: options.markerRotation ?? true,
       progress: options.progress ?? 0,
     };
+
+    // 用于判断是否起始 gps 航向初始化车头方向
+    this.autoCourse = this.options.sourcePoints.length==track.length
+
+
     this.initProgress = options.progress;
     this.isPaused = true;
     this.walkedDistance = 0;
@@ -226,6 +233,9 @@ L.TrackPlayer = class {
           bearing / 2 + this.options.markerRotationOffset / 2
         );
       }
+    }else if (this.marker && this.autoCourse) {
+      // console.log(this.options.sourcePoints[this.trackIndex].dir);
+      this.marker.setRotationAngle(this.options.sourcePoints[this.trackIndex+1].course);
     }
     //更新播放进度
     this.options.progress = Math.min(1, this.walkedDistance / distance);

@@ -54,6 +54,7 @@ An array of latitude and longitude data for the trajectory, which is the same as
 ### Options
 | Options | Type | Default | Description |
 | --- | --- | --- | --- |
+| **sourcePoints** | array[object] | [] | 包含真实航向属性的 JSON 数组，用于同步设置车辆的实际车头方向，其中每个 JSON 元素中航向的属性名为 course（范围 0~360 度），表示车头的朝向角度, markerRotationOrigin=false 时生效 。
 | **speed** | Number | 600 | Travel speed (km/h)
 | **weight** | Number | 8 | Width of the trajectory line |
 | **markerIcon** | L.icon | - | The icon of the moving marker during playback has a value equivalent to the 'icon' property of the `L.marker`. |
