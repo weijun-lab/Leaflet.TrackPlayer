@@ -10,13 +10,12 @@ L.TrackPlayer = class {
       leafletLatlngs.map(({ lng, lat }) => [lng, lat])
     );
     this.distanceSlice = [0];
-    this.track.geometry.coordinates.forEach((item, index, arr) => {
-      if(index!==0){
-        let line = turf.lineString(arr.slice(0,index+1));
-        this.distanceSlice.push(turf.length(line));
-      }
-    });
-    this.distance = turf.length(this.track);
+    const coords = this.track.geometry.coordinates;
+    this.distanceSlice = [0];
+    for (let i = 1; i < coords.length; i++) {
+      this.distanceSlice[i] = this.distanceSlice[i-1] + turf.distance(coords[i-1], coords[i]); // km
+    }
+    this.distance = this.distanceSlice[this.distanceSlice.length - 1];
     this.addedToMap = false;
     this.options = {
       speed: options.speed ?? 600,
