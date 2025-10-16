@@ -1,41 +1,41 @@
-var N = (e, s, t) => new Promise((n, r) => {
-  var o = (l) => {
+var N = (e, s, t) => new Promise((a, n) => {
+  var l = (u) => {
     try {
-      u(t.next(l));
-    } catch (p) {
-      r(p);
+      c(t.next(u));
+    } catch (m) {
+      n(m);
     }
-  }, f = (l) => {
+  }, d = (u) => {
     try {
-      u(t.throw(l));
-    } catch (p) {
-      r(p);
+      c(t.throw(u));
+    } catch (m) {
+      n(m);
     }
-  }, u = (l) => l.done ? n(l.value) : Promise.resolve(l.value).then(o, f);
-  u((t = t.apply(e, s)).next());
+  }, c = (u) => u.done ? a(u.value) : Promise.resolve(u.value).then(l, d);
+  c((t = t.apply(e, s)).next());
 });
 import _ from "leaflet";
-var b = 63710088e-1, Z = {
-  centimeters: b * 100,
-  centimetres: b * 100,
-  degrees: b / 111325,
-  feet: b * 3.28084,
-  inches: b * 39.37,
-  kilometers: b / 1e3,
-  kilometres: b / 1e3,
-  meters: b,
-  metres: b,
-  miles: b / 1609.344,
-  millimeters: b * 1e3,
-  millimetres: b * 1e3,
-  nauticalmiles: b / 1852,
+var v = 63710088e-1, G = {
+  centimeters: v * 100,
+  centimetres: v * 100,
+  degrees: v / 111325,
+  feet: v * 3.28084,
+  inches: v * 39.37,
+  kilometers: v / 1e3,
+  kilometres: v / 1e3,
+  meters: v,
+  metres: v,
+  miles: v / 1609.344,
+  millimeters: v * 1e3,
+  millimetres: v * 1e3,
+  nauticalmiles: v / 1852,
   radians: 1,
-  yards: b * 1.0936
+  yards: v * 1.0936
 };
-function C(e, s, t) {
+function q(e, s, t) {
   t === void 0 && (t = {});
-  var n = { type: "Feature" };
-  return (t.id === 0 || t.id) && (n.id = t.id), t.bbox && (n.bbox = t.bbox), n.properties = s || {}, n.geometry = e, n;
+  var a = { type: "Feature" };
+  return (t.id === 0 || t.id) && (a.id = t.id), t.bbox && (a.bbox = t.bbox), a.properties = s || {}, a.geometry = e, a;
 }
 function O(e, s, t) {
   if (t === void 0 && (t = {}), !e)
@@ -44,33 +44,33 @@ function O(e, s, t) {
     throw new Error("coordinates must be an Array");
   if (e.length < 2)
     throw new Error("coordinates must be at least 2 numbers long");
-  if (!H(e[0]) || !H(e[1]))
+  if (!j(e[0]) || !j(e[1]))
     throw new Error("coordinates must contain numbers");
-  var n = {
+  var a = {
     type: "Point",
     coordinates: e
   };
-  return C(n, s, t);
+  return q(a, s, t);
 }
-function S(e, s, t) {
+function R(e, s, t) {
   if (t === void 0 && (t = {}), e.length < 2)
     throw new Error("coordinates must be an array of two or more positions");
-  var n = {
+  var a = {
     type: "LineString",
     coordinates: e
   };
-  return C(n, s, t);
+  return q(a, s, t);
 }
-function K(e, s) {
+function Z(e, s) {
   s === void 0 && (s = "kilometers");
-  var t = Z[s];
+  var t = G[s];
   if (!t)
     throw new Error(s + " units is invalid");
   return e * t;
 }
-function Q(e, s) {
+function J(e, s) {
   s === void 0 && (s = "kilometers");
-  var t = Z[s];
+  var t = G[s];
   if (!t)
     throw new Error(s + " units is invalid");
   return e / t;
@@ -79,241 +79,17 @@ function F(e) {
   var s = e % (2 * Math.PI);
   return s * 180 / Math.PI;
 }
-function M(e) {
+function w(e) {
   var s = e % 360;
   return s * Math.PI / 180;
 }
-function H(e) {
+function j(e) {
   return !isNaN(e) && e !== null && !Array.isArray(e);
 }
-function X(e) {
+function K(e) {
   return !!e && e.constructor === Object;
 }
-function J(e, s, t) {
-  if (e !== null)
-    for (var n, r, o, f, u, l, p, v = 0, g = 0, k, a = e.type, i = a === "FeatureCollection", h = a === "Feature", c = i ? e.features.length : 1, d = 0; d < c; d++) {
-      p = i ? e.features[d].geometry : h ? e.geometry : e, k = p ? p.type === "GeometryCollection" : !1, u = k ? p.geometries.length : 1;
-      for (var y = 0; y < u; y++) {
-        var m = 0, w = 0;
-        if (f = k ? p.geometries[y] : p, f !== null) {
-          l = f.coordinates;
-          var P = f.type;
-          switch (v = 0, P) {
-            case null:
-              break;
-            case "Point":
-              if (s(
-                l,
-                g,
-                d,
-                m,
-                w
-              ) === !1)
-                return !1;
-              g++, m++;
-              break;
-            case "LineString":
-            case "MultiPoint":
-              for (n = 0; n < l.length; n++) {
-                if (s(
-                  l[n],
-                  g,
-                  d,
-                  m,
-                  w
-                ) === !1)
-                  return !1;
-                g++, P === "MultiPoint" && m++;
-              }
-              P === "LineString" && m++;
-              break;
-            case "Polygon":
-            case "MultiLineString":
-              for (n = 0; n < l.length; n++) {
-                for (r = 0; r < l[n].length - v; r++) {
-                  if (s(
-                    l[n][r],
-                    g,
-                    d,
-                    m,
-                    w
-                  ) === !1)
-                    return !1;
-                  g++;
-                }
-                P === "MultiLineString" && m++, P === "Polygon" && w++;
-              }
-              P === "Polygon" && m++;
-              break;
-            case "MultiPolygon":
-              for (n = 0; n < l.length; n++) {
-                for (w = 0, r = 0; r < l[n].length; r++) {
-                  for (o = 0; o < l[n][r].length - v; o++) {
-                    if (s(
-                      l[n][r][o],
-                      g,
-                      d,
-                      m,
-                      w
-                    ) === !1)
-                      return !1;
-                    g++;
-                  }
-                  w++;
-                }
-                m++;
-              }
-              break;
-            case "GeometryCollection":
-              for (n = 0; n < f.geometries.length; n++)
-                if (J(f.geometries[n], s) === !1)
-                  return !1;
-              break;
-            default:
-              throw new Error("Unknown Geometry Type");
-          }
-        }
-      }
-    }
-}
-function Y(e, s) {
-  var t, n, r, o, f, u, l, p, v, g, k = 0, a = e.type === "FeatureCollection", i = e.type === "Feature", h = a ? e.features.length : 1;
-  for (t = 0; t < h; t++) {
-    for (u = a ? e.features[t].geometry : i ? e.geometry : e, p = a ? e.features[t].properties : i ? e.properties : {}, v = a ? e.features[t].bbox : i ? e.bbox : void 0, g = a ? e.features[t].id : i ? e.id : void 0, l = u ? u.type === "GeometryCollection" : !1, f = l ? u.geometries.length : 1, r = 0; r < f; r++) {
-      if (o = l ? u.geometries[r] : u, o === null) {
-        if (s(
-          null,
-          k,
-          p,
-          v,
-          g
-        ) === !1)
-          return !1;
-        continue;
-      }
-      switch (o.type) {
-        case "Point":
-        case "LineString":
-        case "MultiPoint":
-        case "Polygon":
-        case "MultiLineString":
-        case "MultiPolygon": {
-          if (s(
-            o,
-            k,
-            p,
-            v,
-            g
-          ) === !1)
-            return !1;
-          break;
-        }
-        case "GeometryCollection": {
-          for (n = 0; n < o.geometries.length; n++)
-            if (s(
-              o.geometries[n],
-              k,
-              p,
-              v,
-              g
-            ) === !1)
-              return !1;
-          break;
-        }
-        default:
-          throw new Error("Unknown Geometry Type");
-      }
-    }
-    k++;
-  }
-}
-function j(e, s) {
-  Y(e, function(t, n, r, o, f) {
-    var u = t === null ? null : t.type;
-    switch (u) {
-      case null:
-      case "Point":
-      case "LineString":
-      case "Polygon":
-        return s(
-          C(t, r, { bbox: o, id: f }),
-          n,
-          0
-        ) === !1 ? !1 : void 0;
-    }
-    var l;
-    switch (u) {
-      case "MultiPoint":
-        l = "Point";
-        break;
-      case "MultiLineString":
-        l = "LineString";
-        break;
-      case "MultiPolygon":
-        l = "Polygon";
-        break;
-    }
-    for (var p = 0; p < t.coordinates.length; p++) {
-      var v = t.coordinates[p], g = {
-        type: l,
-        coordinates: v
-      };
-      if (s(C(g, r), n, p) === !1)
-        return !1;
-    }
-  });
-}
-function $(e, s) {
-  j(e, function(t, n, r) {
-    var o = 0;
-    if (t.geometry) {
-      var f = t.geometry.type;
-      if (!(f === "Point" || f === "MultiPoint")) {
-        var u, l = 0, p = 0, v = 0;
-        if (J(
-          t,
-          function(g, k, a, i, h) {
-            if (u === void 0 || n > l || i > p || h > v) {
-              u = g, l = n, p = i, v = h, o = 0;
-              return;
-            }
-            var c = S(
-              [u, g],
-              t.properties
-            );
-            if (s(
-              c,
-              n,
-              r,
-              h,
-              o
-            ) === !1)
-              return !1;
-            o++, u = g;
-          }
-        ) === !1)
-          return !1;
-      }
-    }
-  });
-}
-function tt(e, s, t) {
-  var n = t, r = !1;
-  return $(
-    e,
-    function(o, f, u, l, p) {
-      r === !1 && t === void 0 ? n = o : n = s(
-        n,
-        o,
-        f,
-        u,
-        l,
-        p
-      ), r = !0;
-    }
-  ), n;
-}
-function E(e) {
+function D(e) {
   if (!e)
     throw new Error("coord is required");
   if (!Array.isArray(e)) {
@@ -326,168 +102,162 @@ function E(e) {
     return e;
   throw new Error("coord must be GeoJSON Point or an Array of numbers");
 }
-function et(e) {
+function Q(e) {
   return e.type === "Feature" ? e.geometry : e;
 }
-var it = typeof globalThis != "undefined" ? globalThis : typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : {};
-function U(e, s, t) {
+var W = typeof globalThis != "undefined" ? globalThis : typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : {};
+function B(e, s, t) {
   t === void 0 && (t = {});
-  var n = E(e), r = E(s), o = M(r[1] - n[1]), f = M(r[0] - n[0]), u = M(n[1]), l = M(r[1]), p = Math.pow(Math.sin(o / 2), 2) + Math.pow(Math.sin(f / 2), 2) * Math.cos(u) * Math.cos(l);
-  return K(2 * Math.atan2(Math.sqrt(p), Math.sqrt(1 - p)), t.units);
+  var a = D(e), n = D(s), l = w(n[1] - a[1]), d = w(n[0] - a[0]), c = w(a[1]), u = w(n[1]), m = Math.pow(Math.sin(l / 2), 2) + Math.pow(Math.sin(d / 2), 2) * Math.cos(c) * Math.cos(u);
+  return Z(2 * Math.atan2(Math.sqrt(m), Math.sqrt(1 - m)), t.units);
 }
-function B(e, s, t, n) {
-  n === void 0 && (n = {});
-  var r = E(e), o = M(r[0]), f = M(r[1]), u = M(t), l = Q(s, n.units), p = Math.asin(Math.sin(f) * Math.cos(l) + Math.cos(f) * Math.sin(l) * Math.cos(u)), v = o + Math.atan2(Math.sin(u) * Math.sin(l) * Math.cos(f), Math.cos(l) - Math.sin(f) * Math.sin(p)), g = F(v), k = F(p);
-  return O([g, k], n.properties);
+function z(e, s, t, a) {
+  a === void 0 && (a = {});
+  var n = D(e), l = w(n[0]), d = w(n[1]), c = w(t), u = J(s, a.units), m = Math.asin(Math.sin(d) * Math.cos(u) + Math.cos(d) * Math.sin(u) * Math.cos(c)), k = l + Math.atan2(Math.sin(c) * Math.sin(u) * Math.cos(d), Math.cos(u) - Math.sin(d) * Math.sin(m)), g = F(k), b = F(m);
+  return O([g, b], a.properties);
 }
-function T(e, s, t) {
+function S(e, s, t) {
   if (t === void 0 && (t = {}), t.final === !0)
-    return st(e, s);
-  var n = E(e), r = E(s), o = M(n[0]), f = M(r[0]), u = M(n[1]), l = M(r[1]), p = Math.sin(f - o) * Math.cos(l), v = Math.cos(u) * Math.sin(l) - Math.sin(u) * Math.cos(l) * Math.cos(f - o);
-  return F(Math.atan2(p, v));
+    return X(e, s);
+  var a = D(e), n = D(s), l = w(a[0]), d = w(n[0]), c = w(a[1]), u = w(n[1]), m = Math.sin(d - l) * Math.cos(u), k = Math.cos(c) * Math.sin(u) - Math.sin(c) * Math.cos(u) * Math.cos(d - l);
+  return F(Math.atan2(m, k));
 }
-function st(e, s) {
-  var t = T(s, e);
+function X(e, s) {
+  var t = S(s, e);
   return t = (t + 180) % 360, t;
 }
-function rt(e, s, t) {
+function Y(e, s, t) {
   t === void 0 && (t = {});
-  for (var n = et(e), r = n.coordinates, o = 0, f = 0; f < r.length && !(s >= o && f === r.length - 1); f++)
-    if (o >= s) {
-      var u = s - o;
-      if (u) {
-        var l = T(r[f], r[f - 1]) - 180, p = B(r[f], u, l, t);
-        return p;
+  for (var a = Q(e), n = a.coordinates, l = 0, d = 0; d < n.length && !(s >= l && d === n.length - 1); d++)
+    if (l >= s) {
+      var c = s - l;
+      if (c) {
+        var u = S(n[d], n[d - 1]) - 180, m = z(n[d], c, u, t);
+        return m;
       } else
-        return O(r[f]);
+        return O(n[d]);
     } else
-      o += U(r[f], r[f + 1], t);
-  return O(r[r.length - 1]);
+      l += B(n[d], n[d + 1], t);
+  return O(n[n.length - 1]);
 }
-function q(e, s) {
-  return s === void 0 && (s = {}), tt(e, function(t, n) {
-    var r = n.geometry.coordinates;
-    return t + U(r[0], r[1], s);
-  }, 0);
-}
-function V(e, s, t, n) {
-  if (n = n || {}, !X(n)) throw new Error("options is invalid");
-  var r, o = [];
-  if (e.type === "Feature") r = e.geometry.coordinates;
-  else if (e.type === "LineString") r = e.coordinates;
+function H(e, s, t, a) {
+  if (a = a || {}, !K(a)) throw new Error("options is invalid");
+  var n, l = [];
+  if (e.type === "Feature") n = e.geometry.coordinates;
+  else if (e.type === "LineString") n = e.coordinates;
   else throw new Error("input must be a LineString Feature or Geometry");
-  for (var f = r.length, u = 0, l, p, v, g = 0; g < r.length && !(s >= u && g === r.length - 1); g++) {
-    if (u > s && o.length === 0) {
-      if (l = s - u, !l)
-        return o.push(r[g]), S(o);
-      p = T(r[g], r[g - 1]) - 180, v = B(r[g], l, p, n), o.push(v.geometry.coordinates);
+  for (var d = n.length, c = 0, u, m, k, g = 0; g < n.length && !(s >= c && g === n.length - 1); g++) {
+    if (c > s && l.length === 0) {
+      if (u = s - c, !u)
+        return l.push(n[g]), R(l);
+      m = S(n[g], n[g - 1]) - 180, k = z(n[g], u, m, a), l.push(k.geometry.coordinates);
     }
-    if (u >= t)
-      return l = t - u, l ? (p = T(r[g], r[g - 1]) - 180, v = B(r[g], l, p, n), o.push(v.geometry.coordinates), S(o)) : (o.push(r[g]), S(o));
-    if (u >= s && o.push(r[g]), g === r.length - 1)
-      return S(o);
-    u += U(r[g], r[g + 1], n);
+    if (c >= t)
+      return u = t - c, u ? (m = S(n[g], n[g - 1]) - 180, k = z(n[g], u, m, a), l.push(k.geometry.coordinates), R(l)) : (l.push(n[g]), R(l));
+    if (c >= s && l.push(n[g]), g === n.length - 1)
+      return R(l);
+    c += B(n[g], n[g + 1], a);
   }
-  if (u < s && r.length === f)
+  if (c < s && n.length === d)
     throw new Error("Start position is beyond line");
-  var k = r[r.length - 1];
-  return S([k, k]);
+  var b = n[n.length - 1];
+  return R([b, b]);
 }
 (function(e, s) {
-  (function(t, n) {
-    n(_);
-  })(it, function(t) {
+  (function(t, a) {
+    a(_);
+  })(W, function(t) {
     t = t && t.hasOwnProperty("default") ? t.default : t;
-    function n(a, i) {
-      var h = i.x - a.x, c = i.y - a.y;
-      return Math.sqrt(h * h + c * c);
+    function a(r, i) {
+      var o = i.x - r.x, h = i.y - r.y;
+      return Math.sqrt(o * o + h * h);
     }
-    var r = function(i, h) {
-      return (Math.atan2(h.y - i.y, h.x - i.x) * 180 / Math.PI + 90 + 360) % 360;
-    }, o = function(i, h) {
-      var c = i.value, d = i.isInPixels;
-      return d ? c / h : c;
+    var n = function(i, o) {
+      return (Math.atan2(o.y - i.y, o.x - i.x) * 180 / Math.PI + 90 + 360) % 360;
+    }, l = function(i, o) {
+      var h = i.value, p = i.isInPixels;
+      return p ? h / o : h;
     };
-    function f(a) {
-      if (typeof a == "string" && a.indexOf("%") !== -1)
+    function d(r) {
+      if (typeof r == "string" && r.indexOf("%") !== -1)
         return {
-          value: parseFloat(a) / 100,
+          value: parseFloat(r) / 100,
           isInPixels: !1
         };
-      var i = a ? parseFloat(a) : 0;
+      var i = r ? parseFloat(r) : 0;
       return {
         value: i,
         isInPixels: i > 0
       };
     }
-    var u = function(i, h) {
-      return i.x === h.x && i.y === h.y;
+    var c = function(i, o) {
+      return i.x === o.x && i.y === o.y;
     };
-    function l(a) {
-      return a.reduce(function(i, h, c, d) {
-        if (c > 0 && !u(h, d[c - 1])) {
-          var y = d[c - 1], m = i.length > 0 ? i[i.length - 1].distB : 0, w = n(y, h);
+    function u(r) {
+      return r.reduce(function(i, o, h, p) {
+        if (h > 0 && !c(o, p[h - 1])) {
+          var f = p[h - 1], y = i.length > 0 ? i[i.length - 1].distB : 0, A = a(f, o);
           i.push({
-            a: y,
-            b: h,
-            distA: m,
-            distB: m + w,
-            heading: r(y, h)
+            a: f,
+            b: o,
+            distA: y,
+            distB: y + A,
+            heading: n(f, o)
           });
         }
         return i;
       }, []);
     }
-    function p(a, i) {
-      var h = l(a), c = h.length;
-      if (c === 0)
+    function m(r, i) {
+      var o = u(r), h = o.length;
+      if (h === 0)
         return [];
-      var d = h[c - 1].distB, y = o(i.offset, d), m = o(i.endOffset, d), w = o(i.repeat, d), P = d * w, R = y > 0 ? d * y : 0, D = m > 0 ? d * m : 0, x = [], G = R;
+      var p = o[h - 1].distB, f = l(i.offset, p), y = l(i.endOffset, p), A = l(i.repeat, p), P = p * A, T = f > 0 ? p * f : 0, x = y > 0 ? p * y : 0, E = [], I = T;
       do
-        x.push(G), G += P;
-      while (P > 0 && G < d - D);
-      var z = 0, A = h[0];
-      return x.map(function(I) {
-        for (; I > A.distB && z < c - 1; )
-          z++, A = h[z];
-        var W = (I - A.distA) / (A.distB - A.distA);
+        E.push(I), I += P;
+      while (P > 0 && I < p - x);
+      var C = 0, M = o[0];
+      return E.map(function(U) {
+        for (; U > M.distB && C < h - 1; )
+          C++, M = o[C];
+        var V = (U - M.distA) / (M.distB - M.distA);
         return {
-          pt: v(A.a, A.b, W),
-          heading: A.heading
+          pt: k(M.a, M.b, V),
+          heading: M.heading
         };
       });
     }
-    function v(a, i, h) {
-      return i.x !== a.x ? {
-        x: a.x + h * (i.x - a.x),
-        y: a.y + h * (i.y - a.y)
+    function k(r, i, o) {
+      return i.x !== r.x ? {
+        x: r.x + o * (i.x - r.x),
+        y: r.y + o * (i.y - r.y)
       } : {
-        x: a.x,
-        y: a.y + (i.y - a.y) * h
+        x: r.x,
+        y: r.y + (i.y - r.y) * o
       };
     }
     (function() {
-      var a = L.Marker.prototype._initIcon, i = L.Marker.prototype._setPos, h = L.DomUtil.TRANSFORM === "msTransform";
+      var r = L.Marker.prototype._initIcon, i = L.Marker.prototype._setPos, o = L.DomUtil.TRANSFORM === "msTransform";
       L.Marker.addInitHook(function() {
-        var c = this.options.icon && this.options.icon.options, d = c && this.options.icon.options.iconAnchor;
-        d && (d = d[0] + "px " + d[1] + "px"), this.options.rotationOrigin = this.options.rotationOrigin || d || "center bottom", this.options.rotationAngle = this.options.rotationAngle || 0, this.on("drag", function(y) {
-          y.target._applyRotation();
+        var h = this.options.icon && this.options.icon.options, p = h && this.options.icon.options.iconAnchor;
+        p && (p = p[0] + "px " + p[1] + "px"), this.options.rotationOrigin = this.options.rotationOrigin || p || "center bottom", this.options.rotationAngle = this.options.rotationAngle || 0, this.on("drag", function(f) {
+          f.target._applyRotation();
         });
       }), L.Marker.include({
         _initIcon: function() {
-          a.call(this);
+          r.call(this);
         },
-        _setPos: function(c) {
-          i.call(this, c), this._applyRotation();
+        _setPos: function(h) {
+          i.call(this, h), this._applyRotation();
         },
         _applyRotation: function() {
-          this.options.rotationAngle && (this._icon.style[L.DomUtil.TRANSFORM + "Origin"] = this.options.rotationOrigin, h ? this._icon.style[L.DomUtil.TRANSFORM] = "rotate(" + this.options.rotationAngle + "deg)" : this._icon.style[L.DomUtil.TRANSFORM] += " rotateZ(" + this.options.rotationAngle + "deg)");
+          this.options.rotationAngle && (this._icon.style[L.DomUtil.TRANSFORM + "Origin"] = this.options.rotationOrigin, o ? this._icon.style[L.DomUtil.TRANSFORM] = "rotate(" + this.options.rotationAngle + "deg)" : this._icon.style[L.DomUtil.TRANSFORM] += " rotateZ(" + this.options.rotationAngle + "deg)");
         },
-        setRotationAngle: function(c) {
-          return this.options.rotationAngle = c, this.update(), this;
+        setRotationAngle: function(h) {
+          return this.options.rotationAngle = h, this.update(), this;
         },
-        setRotationOrigin: function(c) {
-          return this.options.rotationOrigin = c, this.update(), this;
+        setRotationOrigin: function(h) {
+          return this.options.rotationOrigin = h, this.update(), this;
         }
       });
     })(), t.Symbol = t.Symbol || {}, t.Symbol.Dash = t.Class.extend({
@@ -498,15 +268,15 @@ function V(e, s, t, n) {
       initialize: function(i) {
         t.Util.setOptions(this, i), this.options.pathOptions.clickable = !1;
       },
-      buildSymbol: function(i, h, c, d, y) {
-        var m = this.options, w = Math.PI / 180;
-        if (m.pixelSize <= 1)
-          return t.polyline([i.latLng, i.latLng], m.pathOptions);
-        var P = c.project(i.latLng), R = -(i.heading - 90) * w, D = t.point(P.x + m.pixelSize * Math.cos(R + Math.PI) / 2, P.y + m.pixelSize * Math.sin(R) / 2), x = P.add(P.subtract(D));
-        return t.polyline([c.unproject(D), c.unproject(x)], m.pathOptions);
+      buildSymbol: function(i, o, h, p, f) {
+        var y = this.options, A = Math.PI / 180;
+        if (y.pixelSize <= 1)
+          return t.polyline([i.latLng, i.latLng], y.pathOptions);
+        var P = h.project(i.latLng), T = -(i.heading - 90) * A, x = t.point(P.x + y.pixelSize * Math.cos(T + Math.PI) / 2, P.y + y.pixelSize * Math.sin(T) / 2), E = P.add(P.subtract(x));
+        return t.polyline([h.unproject(x), h.unproject(E)], y.pathOptions);
       }
-    }), t.Symbol.dash = function(a) {
-      return new t.Symbol.Dash(a);
+    }), t.Symbol.dash = function(r) {
+      return new t.Symbol.Dash(r);
     }, t.Symbol.ArrowHead = t.Class.extend({
       options: {
         polygon: !0,
@@ -520,15 +290,15 @@ function V(e, s, t, n) {
       initialize: function(i) {
         t.Util.setOptions(this, i), this.options.pathOptions.clickable = !1;
       },
-      buildSymbol: function(i, h, c, d, y) {
-        return this.options.polygon ? t.polygon(this._buildArrowPath(i, c), this.options.pathOptions) : t.polyline(this._buildArrowPath(i, c), this.options.pathOptions);
+      buildSymbol: function(i, o, h, p, f) {
+        return this.options.polygon ? t.polygon(this._buildArrowPath(i, h), this.options.pathOptions) : t.polyline(this._buildArrowPath(i, h), this.options.pathOptions);
       },
-      _buildArrowPath: function(i, h) {
-        var c = Math.PI / 180, d = h.project(i.latLng), y = -(i.heading - 90) * c, m = this.options.headAngle / 2 * c, w = y + m, P = y - m, R = t.point(d.x - this.options.pixelSize * Math.cos(w), d.y + this.options.pixelSize * Math.sin(w)), D = t.point(d.x - this.options.pixelSize * Math.cos(P), d.y + this.options.pixelSize * Math.sin(P));
-        return [h.unproject(R), i.latLng, h.unproject(D)];
+      _buildArrowPath: function(i, o) {
+        var h = Math.PI / 180, p = o.project(i.latLng), f = -(i.heading - 90) * h, y = this.options.headAngle / 2 * h, A = f + y, P = f - y, T = t.point(p.x - this.options.pixelSize * Math.cos(A), p.y + this.options.pixelSize * Math.sin(A)), x = t.point(p.x - this.options.pixelSize * Math.cos(P), p.y + this.options.pixelSize * Math.sin(P));
+        return [o.unproject(T), i.latLng, o.unproject(x)];
       }
-    }), t.Symbol.arrowHead = function(a) {
-      return new t.Symbol.ArrowHead(a);
+    }), t.Symbol.arrowHead = function(r) {
+      return new t.Symbol.ArrowHead(r);
     }, t.Symbol.Marker = t.Class.extend({
       options: {
         markerOptions: {},
@@ -537,37 +307,37 @@ function V(e, s, t, n) {
       initialize: function(i) {
         t.Util.setOptions(this, i), this.options.markerOptions.clickable = !1, this.options.markerOptions.draggable = !1;
       },
-      buildSymbol: function(i, h, c, d, y) {
+      buildSymbol: function(i, o, h, p, f) {
         return this.options.rotate && (this.options.markerOptions.rotationAngle = i.heading + (this.options.angleCorrection || 0)), t.marker(i.latLng, this.options.markerOptions);
       }
-    }), t.Symbol.marker = function(a) {
-      return new t.Symbol.Marker(a);
+    }), t.Symbol.marker = function(r) {
+      return new t.Symbol.Marker(r);
     };
     var g = function(i) {
       return i instanceof t.LatLng || Array.isArray(i) && i.length === 2 && typeof i[0] == "number";
-    }, k = function(i) {
+    }, b = function(i) {
       return Array.isArray(i) && g(i[0]);
     };
     t.PolylineDecorator = t.FeatureGroup.extend({
       options: {
         patterns: []
       },
-      initialize: function(i, h) {
-        t.FeatureGroup.prototype.initialize.call(this), t.Util.setOptions(this, h), this._map = null, this._paths = this._initPaths(i), this._bounds = this._initBounds(), this._patterns = this._initPatterns(this.options.patterns);
+      initialize: function(i, o) {
+        t.FeatureGroup.prototype.initialize.call(this), t.Util.setOptions(this, o), this._map = null, this._paths = this._initPaths(i), this._bounds = this._initBounds(), this._patterns = this._initPatterns(this.options.patterns);
       },
       /**
       * Deals with all the different cases. input can be one of these types:
       * array of LatLng, array of 2-number arrays, Polyline, Polygon,
       * array of one of the previous.
       */
-      _initPaths: function(i, h) {
-        var c = this;
-        if (k(i)) {
-          var d = h ? i.concat([i[0]]) : i;
-          return [d];
+      _initPaths: function(i, o) {
+        var h = this;
+        if (b(i)) {
+          var p = o ? i.concat([i[0]]) : i;
+          return [p];
         }
-        return i instanceof t.Polyline ? this._initPaths(i.getLatLngs(), i instanceof t.Polygon) : Array.isArray(i) ? i.reduce(function(y, m) {
-          return y.concat(c._initPaths(m, h));
+        return i instanceof t.Polyline ? this._initPaths(i.getLatLngs(), i instanceof t.Polygon) : Array.isArray(i) ? i.reduce(function(f, y) {
+          return f.concat(h._initPaths(y, o));
         }, []) : [];
       },
       // parse pattern definitions and precompute some values
@@ -591,14 +361,14 @@ function V(e, s, t, n) {
       /**
       * Parse the pattern definition
       */
-      _parsePatternDef: function(i, h) {
+      _parsePatternDef: function(i, o) {
         return {
           symbolFactory: i.symbol,
           // Parse offset and repeat values, managing the two cases:
           // absolute (in pixels) or relative (in percentage of the polyline length)
-          offset: f(i.offset),
-          endOffset: f(i.endOffset),
-          repeat: f(i.repeat)
+          offset: d(i.offset),
+          endOffset: d(i.endOffset),
+          repeat: d(i.repeat)
         };
       },
       onAdd: function(i) {
@@ -612,8 +382,8 @@ function V(e, s, t, n) {
       * we just compute the total bounds of all paths decorated by this instance.
       */
       _initBounds: function() {
-        var i = this._paths.reduce(function(h, c) {
-          return h.concat(c);
+        var i = this._paths.reduce(function(o, h) {
+          return o.concat(h);
         }, []);
         return t.latLngBounds(i);
       },
@@ -623,27 +393,27 @@ function V(e, s, t, n) {
       /**
       * Returns an array of ILayers object
       */
-      _buildSymbols: function(i, h, c) {
-        var d = this;
-        return c.map(function(y, m) {
-          return h.buildSymbol(y, i, d._map, m, c.length);
+      _buildSymbols: function(i, o, h) {
+        var p = this;
+        return h.map(function(f, y) {
+          return o.buildSymbol(f, i, p._map, y, h.length);
         });
       },
       /**
       * Compute pairs of LatLng and heading angle,
       * that define positions and directions of the symbols on the path
       */
-      _getDirectionPoints: function(i, h) {
-        var c = this;
+      _getDirectionPoints: function(i, o) {
+        var h = this;
         if (i.length < 2)
           return [];
-        var d = i.map(function(y) {
-          return c._map.project(y);
+        var p = i.map(function(f) {
+          return h._map.project(f);
         });
-        return p(d, h).map(function(y) {
+        return m(p, o).map(function(f) {
           return {
-            latLng: c._map.unproject(t.point(y.pt)),
-            heading: y.heading
+            latLng: h._map.unproject(t.point(f.pt)),
+            heading: f.heading
           };
         });
       },
@@ -654,12 +424,12 @@ function V(e, s, t, n) {
       * Returns all symbols for a given pattern as an array of FeatureGroup
       */
       _getPatternLayers: function(i) {
-        var h = this, c = this._map.getBounds().pad(0.1);
-        return this._paths.map(function(d) {
-          var y = h._getDirectionPoints(d, i).filter(function(m) {
-            return c.contains(m.latLng);
+        var o = this, h = this._map.getBounds().pad(0.1);
+        return this._paths.map(function(p) {
+          var f = o._getDirectionPoints(p, i).filter(function(y) {
+            return h.contains(y.latLng);
           });
-          return t.featureGroup(h._buildSymbols(d, i.symbolFactory, y));
+          return t.featureGroup(o._buildSymbols(p, i.symbolFactory, f));
         });
       },
       /**
@@ -667,58 +437,58 @@ function V(e, s, t, n) {
       */
       _draw: function() {
         var i = this;
-        this._patterns.map(function(h) {
-          return i._getPatternLayers(h);
-        }).forEach(function(h) {
-          i.addLayer(t.featureGroup(h));
+        this._patterns.map(function(o) {
+          return i._getPatternLayers(o);
+        }).forEach(function(o) {
+          i.addLayer(t.featureGroup(o));
         });
       }
-    }), t.polylineDecorator = function(a, i) {
-      return new t.PolylineDecorator(a, i);
+    }), t.polylineDecorator = function(r, i) {
+      return new t.PolylineDecorator(r, i);
     };
   });
 })();
 (function() {
   var e = L.Marker.prototype._initIcon, s = L.Marker.prototype._setPos, t = L.DomUtil.TRANSFORM === "msTransform";
   L.Marker.addInitHook(function() {
-    var n = this.options.icon && this.options.icon.options, r = n && this.options.icon.options.iconAnchor;
-    r && (r = r[0] + "px " + r[1] + "px"), this.options.rotationOrigin = this.options.rotationOrigin || r || "center bottom", this.options.rotationAngle = this.options.rotationAngle || 0, this.on("drag", function(o) {
-      o.target._applyRotation();
+    var a = this.options.icon && this.options.icon.options, n = a && this.options.icon.options.iconAnchor;
+    n && (n = n[0] + "px " + n[1] + "px"), this.options.rotationOrigin = this.options.rotationOrigin || n || "center bottom", this.options.rotationAngle = this.options.rotationAngle || 0, this.on("drag", function(l) {
+      l.target._applyRotation();
     });
   }), L.Marker.include({
     _initIcon: function() {
       e.call(this);
     },
-    _setPos: function(n) {
-      s.call(this, n), this._applyRotation();
+    _setPos: function(a) {
+      s.call(this, a), this._applyRotation();
     },
     _applyRotation: function() {
       this.options.rotationAngle && (this._icon.style[L.DomUtil.TRANSFORM + "Origin"] = this.options.rotationOrigin, t ? this._icon.style[L.DomUtil.TRANSFORM] = "rotate(" + this.options.rotationAngle + "deg)" : this._icon.style[L.DomUtil.TRANSFORM] += " rotateZ(" + this.options.rotationAngle + "deg)");
     },
-    setRotationAngle: function(n) {
-      return this.options.rotationAngle = n, this.update(), this;
+    setRotationAngle: function(a) {
+      return this.options.rotationAngle = a, this.update(), this;
     },
-    setRotationOrigin: function(n) {
-      return this.options.rotationOrigin = n, this.update(), this;
+    setRotationOrigin: function(a) {
+      return this.options.rotationOrigin = a, this.update(), this;
     }
   });
 })();
 _.TrackPlayer = class {
   constructor(e, s = {}) {
-    var n, r, o, f, u, l, p, v, g, k;
+    var n, l, d, c, u, m, k, g, b, r;
     let t = _.polyline(e)._latlngs;
-    this.track = S(
-      t.map(({ lng: a, lat: i }) => [a, i])
-    ), this.distanceSlice = [0], this.track.geometry.coordinates.forEach((a, i, h) => {
-      if (i !== 0) {
-        let c = S(h.slice(0, i + 1));
-        this.distanceSlice.push(q(c));
-      }
-    }), this.distance = q(this.track), this.addedToMap = !1, this.options = {
+    this.track = R(
+      t.map(({ lng: i, lat: o }) => [i, o])
+    ), this.distanceSlice = [0];
+    const a = this.track.geometry.coordinates;
+    this.distanceSlice = [0];
+    for (let i = 1; i < a.length; i++)
+      this.distanceSlice[i] = this.distanceSlice[i - 1] + B(a[i - 1], a[i]);
+    this.distance = this.distanceSlice[this.distanceSlice.length - 1], this.addedToMap = !1, this.options = {
       speed: (n = s.speed) != null ? n : 600,
-      weight: (r = s.weight) != null ? r : 8,
+      weight: (l = s.weight) != null ? l : 8,
       markerIcon: s.markerIcon,
-      polylineDecoratorOptions: (o = s.polylineDecoratorOptions) != null ? o : {
+      polylineDecoratorOptions: (d = s.polylineDecoratorOptions) != null ? d : {
         patterns: [
           {
             offset: 30,
@@ -732,13 +502,13 @@ _.TrackPlayer = class {
           }
         ]
       },
-      passedLineColor: (f = s.passedLineColor) != null ? f : "#0000ff",
+      passedLineColor: (c = s.passedLineColor) != null ? c : "#0000ff",
       notPassedLineColor: (u = s.notPassedLineColor) != null ? u : "#ff0000",
-      panTo: (l = s.panTo) != null ? l : !0,
-      markerRotationOrigin: (p = s.markerRotationOrigin) != null ? p : "center",
-      markerRotationOffset: (v = s.markerRotationOffset) != null ? v : 0,
-      markerRotation: (g = s.markerRotation) != null ? g : !0,
-      progress: (k = s.progress) != null ? k : 0
+      panTo: (m = s.panTo) != null ? m : !0,
+      markerRotationOrigin: (k = s.markerRotationOrigin) != null ? k : "center",
+      markerRotationOffset: (g = s.markerRotationOffset) != null ? g : 0,
+      markerRotation: (b = s.markerRotation) != null ? b : !0,
+      progress: (r = s.progress) != null ? r : 0
     }, this.initProgress = s.progress, this.isPaused = !0, this.walkedDistance = 0, this.walkedDistanceTemp = 0, this.trackIndex = 0, this.listenedEvents = {
       start: [],
       pause: [],
@@ -753,15 +523,15 @@ _.TrackPlayer = class {
       if (this.marker = _.marker([t[1], t[0]], {
         icon: this.options.markerIcon
       }).addTo(this.map), this.options.markerRotation) {
-        let n = this.track.geometry.coordinates;
+        let a = this.track.geometry.coordinates;
         this.marker.setRotationAngle(
-          T(n[0], n[1]) / 2 + this.options.markerRotationOffset / 2
+          S(a[0], a[1]) / 2 + this.options.markerRotationOffset / 2
         ), this.marker.setRotationOrigin(
           this.options.markerRotationOrigin
         );
       }
     }
-    let s = this.track.geometry.coordinates.map(([t, n]) => [n, t]);
+    let s = this.track.geometry.coordinates.map(([t, a]) => [a, t]);
     return this.notPassedLine = _.polyline(s, {
       weight: this.options.weight,
       color: this.options.notPassedLineColor
@@ -785,10 +555,10 @@ _.TrackPlayer = class {
   startAction() {
     let e = this.distance, s = (t) => {
       if (t && this.addedToMap) {
-        let n = e / this.options.speed * 3600 * 1e3;
+        let a = e / this.options.speed * 3600 * 1e3;
         this.startTimestamp || (this.startTimestamp = t);
-        let r = t - this.startTimestamp;
-        this.walkedDistance = e * (r / n) + this.walkedDistanceTemp, this.playAction();
+        let n = t - this.startTimestamp;
+        this.walkedDistance = e * (n / a) + this.walkedDistanceTemp, this.playAction();
       }
       !this.isPaused && !this.finished && requestAnimationFrame(s);
     };
@@ -797,25 +567,25 @@ _.TrackPlayer = class {
   playAction(e = !1) {
     if (this.isPaused && !e) return;
     let s = this.distance;
-    this.trackIndex = this.distanceSlice.findIndex((r, o, f) => {
-      var u;
-      return this.walkedDistance >= r && this.walkedDistance < ((u = f[o + 1]) != null ? u : 1 / 0);
+    this.trackIndex = this.distanceSlice.findIndex((n, l, d) => {
+      var c;
+      return this.walkedDistance >= n && this.walkedDistance < ((c = d[l + 1]) != null ? c : 1 / 0);
     });
-    let [t, n] = rt(this.track, this.walkedDistance).geometry.coordinates;
-    if (this.markerPoint = [n, t], this.options.panTo && this.map.panTo(this.markerPoint, {
+    let [t, a] = Y(this.track, this.walkedDistance).geometry.coordinates;
+    if (this.markerPoint = [a, t], this.options.panTo && this.map.panTo(this.markerPoint, {
       animate: !1
     }), this.marker && this.marker.setLatLng(this.markerPoint), this.walkedDistance >= s)
       this.notPassedLine.setLatLngs([]);
     else {
-      let r = V(this.track, this.walkedDistance);
+      let n = H(this.track, this.walkedDistance);
       this.notPassedLine.setLatLngs(
-        r.geometry.coordinates.map(([o, f]) => [f, o])
+        n.geometry.coordinates.map(([l, d]) => [d, l])
       );
     }
     if (this.walkedDistance > 0) {
-      let r = V(this.track, 0, this.walkedDistance);
+      let n = H(this.track, 0, this.walkedDistance);
       this.passedLine.setLatLngs(
-        r.geometry.coordinates.map(([o, f]) => [f, o])
+        n.geometry.coordinates.map(([l, d]) => [d, l])
       );
     } else
       this.passedLine.setLatLngs([]);
@@ -823,29 +593,29 @@ _.TrackPlayer = class {
       ...this.passedLine.getLatLngs(),
       ...this.notPassedLine.getLatLngs()
     ]), this.walkedDistance < s && this.options.markerRotation && this.marker) {
-      let r = 0;
-      r = T(
-        O([t, n]),
+      let n = 0;
+      n = S(
+        O([t, a]),
         O(
           this.track.geometry.coordinates[this.trackIndex + 1]
         )
       ), this.marker.setRotationAngle(
-        r / 2 + this.options.markerRotationOffset / 2
+        n / 2 + this.options.markerRotationOffset / 2
       );
     }
     if (this.options.progress = Math.min(1, this.walkedDistance / s), this.listenedEvents.progressCallback.forEach(
-      (r) => r(
+      (n) => n(
         this.options.progress,
         _.latLng(...this.markerPoint),
         this.trackIndex
       )
-    ), this.walkedDistance >= s && (this.walkedDistance = s, this.finished = !0, this.listenedEvents.finished.forEach((r) => r()), this.options.markerRotation && this.marker)) {
-      let r = this.track.geometry.coordinates, o = T(
-        O(r.at(-2)),
-        O(r.at(-1))
+    ), this.walkedDistance >= s && (this.walkedDistance = s, this.finished = !0, this.listenedEvents.finished.forEach((n) => n()), this.options.markerRotation && this.marker)) {
+      let n = this.track.geometry.coordinates, l = S(
+        O(n.at(-2)),
+        O(n.at(-1))
       );
       this.marker.setRotationAngle(
-        o / 2 + this.options.markerRotationOffset / 2
+        l / 2 + this.options.markerRotationOffset / 2
       );
     }
   }
